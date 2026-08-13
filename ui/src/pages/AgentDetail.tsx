@@ -94,6 +94,7 @@ import {
   arraysEqual,
   isReadOnlyUnmanagedSkillEntry,
 } from "../lib/agent-skills-state";
+import { supportsInstructionsBundle } from "../lib/agentInstructions";
 
 const runStatusIcons: Record<string, { icon: typeof CheckCircle2; color: string }> = {
   succeeded: { icon: CheckCircle2, color: "text-green-600 dark:text-green-400" },
@@ -1600,13 +1601,7 @@ function PromptsTab({
     selectedFile: string;
   } | null>(null);
 
-  const isLocal =
-    agent.adapterType === "claude_local" ||
-    agent.adapterType === "codex_local" ||
-    agent.adapterType === "opencode_local" ||
-    agent.adapterType === "pi_local" ||
-    agent.adapterType === "hermes_local" ||
-    agent.adapterType === "cursor";
+  const isLocal = supportsInstructionsBundle(agent.adapterType);
 
   const { data: bundle, isLoading: bundleLoading } = useQuery({
     queryKey: queryKeys.agents.instructionsBundle(agent.id),
